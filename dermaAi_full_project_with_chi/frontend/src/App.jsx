@@ -366,7 +366,7 @@ function App() {
         <div className="content">
           {activeModule === 'dermoscopy' && (
             <>
-              <PageHeading eyebrow="IMAGE REVIEW" title="Dermoscopy" intro="Capture a lesion image and clinical context for clinician review." badge="HAM10000 model · Not installed" />
+              <PageHeading eyebrow="IMAGE REVIEW" title="Dermoscopy" intro="Capture a lesion image and clinical context for clinician review." badge={modelStatus?.available ? 'Hosted HAM10000 · Online' : 'Hosted HAM10000 · Unavailable'} />
               <div className="dermoscopy-layout">
                 <form className="workspace-panel" onSubmit={handleDermoscopySubmit}>
                   <div className="panel-heading"><div><h2>New case</h2><p>Patient details and lesion image</p></div><span className="step-label">01 <i>/</i> CASE</span></div>
@@ -383,6 +383,10 @@ function App() {
                   <label className="field"><span>Clinician-confirmed diagnosis <em>Optional until reviewed</em></span><input onChange={(event) => setDermoscopyCase((value) => ({ ...value, confirmed_diagnosis: event.target.value }))} type="text" value={dermoscopyCase.confirmed_diagnosis} /></label>
                   <label className="field"><span>Clinical notes</span><textarea onChange={(event) => setDermoscopyCase((value) => ({ ...value, clinical_notes: event.target.value }))} rows="3" value={dermoscopyCase.clinical_notes} /></label>
                   <label className="consent-field"><input checked={dermoscopyCase.consent_for_training} onChange={(event) => setDermoscopyCase((value) => ({ ...value, consent_for_training: event.target.checked }))} type="checkbox" /><span>Patient has consented to use this image for future model training. A confirmed clinician diagnosis is also required.</span></label>
+                  <label className="consent-field external-consent"><input checked={consentToExternalProcessing} onChange={(event) => { setConsentToExternalProcessing(event.target.checked); setPrediction(null); setPredictionError(''); }} type="checkbox" /><span>I consent to send this image to the third-party Hugging Face HAM10000 research model for analysis. Do not use patient-identifiable images.</span></label>
+                  <div className="prediction-actions"><button className="secondary-button" disabled={!token || !imageFile || !consentToExternalProcessing || !modelStatus?.available || analyzing} onClick={handlePrediction} type="button">{analyzing ? 'Analyzing image…' : 'Analyze with hosted model'}</button><span>Image is sent only when you select Analyze.</span></div>
+                  {predictionError && <div className="inline-message error-message">{predictionError}</div>}
+                  {prediction && <div className="prediction-result"><div className="result-heading"><div><div className="status-eyebrow">RESEARCH MODEL OUTPUT</div><h3>{prediction.predicted_class}</h3></div><strong>{Math.round(prediction.confidence * 100)}%</strong></div><div className="probability-list">{Object.entries(prediction.all_probabilities).sort((first, second) => second[1] - first[1]).slice(0, 4).map(([label, score]) => <div className="probability-row" key={label}><span>{label}</span><span>{Math.round(score * 100)}%</span><div><i style={{ width: `${Math.max(0, Math.min(100, score * 100))}%` }} /></div></div>)}</div><p>{prediction.disclaimer}</p></div>}
                   {uploadError && <div className="inline-message error-message">{uploadError}</div>}
                   {uploadMessage && <div className="inline-message info-message">{uploadMessage}</div>}
                   <div className="form-actions"><span>{token ? `Saving as ${username}` : 'Sign in required to save a private case'}</span><button className="primary-button" disabled={!token || savingCase} type="submit"><Upload size={16} />{savingCase ? 'Saving case…' : 'Save case'}</button></div>
@@ -392,10 +396,10 @@ function App() {
                   <div className="model-status-panel">
                     <div className="status-icon"><Activity size={19} /></div>
                     <div className="status-eyebrow">IMAGE CLASSIFIER</div>
-                    <h2>Model unavailable</h2>
-                    <p>The provided project has no trained weights or inference service. This screen will not invent a diagnosis or confidence score.</p>
+                    <h2>{modelStatus?.available ? 'Hosted model available' : 'Model unavailable'}</h2>
+                    <p>{modelStatus?.available ? 'A community-hosted HAM10000 classifier is reachable. Its output is research-only and images leave this device only after explicit consent.' : modelStatus?.detail || 'Checking the hosted HAM10000 model…'}</p>
                     <div className="status-rule" />
-                    <div className="status-foot"><span className="status-dot warning" /> HAM10000 model not configured</div>
+                    <div className="status-foot"><span className={`status-dot ${modelStatus?.available ? '' : 'warning'}`} /> {modelStatus?.available ? 'Hugging Face community endpoint' : 'Hosted endpoint unavailable'}</div>
                   </div>
                   {token ? (
                     <div className="recent-panel"><div className="recent-heading"><h2>Recent cases</h2><span>{caseList.length}</span></div>{caseList.slice(0, 5).map((item) => <div className="case-row" key={item.id}><div><strong>{item.confirmed_diagnosis || 'Awaiting clinician review'}</strong><span>{item.localization} · {new Date(item.submitted_at).toLocaleDateString()}</span></div><button disabled={reviewingCase === item.id} onClick={() => handleReviewImage(item.id)} aria-label={`Review case ${item.id} image`}><Camera size={15} /></button></div>)}{reviewImage && <img className="review-image" src={reviewImage} alt="Private dermoscopy case selected for review" />}{uploadError && <div className="inline-message error-message">{uploadError}</div>}{caseList.length === 0 && <p className="muted-copy">Saved cases will appear here.</p>}</div>
