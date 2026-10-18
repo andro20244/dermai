@@ -120,6 +120,9 @@ function App() {
   const [procedureError, setProcedureError] = useState('');
 
   useEffect(() => {
+    setConsentToExternalProcessing(false);
+    setPrediction(null);
+    setPredictionError('');
     if (!imageFile) {
       setImagePreview('');
       return undefined;

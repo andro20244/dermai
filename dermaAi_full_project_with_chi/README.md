@@ -52,9 +52,11 @@ npm run dev
 
 The Vite server proxies `/api` to `localhost:8000`. For direct backend development, use Python 3.12+, install `backend/requirements.txt`, then run migrations and `python manage.py seed_formulary` from `backend/`.
 
-## Model and procedure limitations
+## Model and procedure notes
 
-The archive and workspace contain no HAM10000 dataset, trained weights, model architecture, preprocessing specification, or class-label mapping. Dermoscopy intake and clinician review work, but automated diagnosis, confidence, and descriptive analysis are unavailable. Images submitted with a confirmed diagnosis and explicit consent are stored; no training pipeline is included.
+The dermoscopy screen calls a community-hosted [HAM10000 API](https://javariarizwan-ham10000-api.hf.space/docs); no model weights are downloaded to your Mac. The API is third-party hosted and may sleep or become unavailable. A clinician must sign in and explicitly consent before an image is sent. Do not send identifiable patient photos. Returned class/confidence values are research output, not a diagnosis. Configure another compatible endpoint with `DERMOSCOPY_MODEL_API_URL` in `.env`.
+
+Images submitted with a confirmed diagnosis and separate training consent are stored locally; no model-training pipeline is included.
 
 All procedure endpoints return `501 Not Implemented` after validating clinician access and electrosurgery inputs. Freeze/thaw timing, electrosurgery power or anesthesia, laser settings, filler/Botox products or quantities, UVB dose, and Arabic pre/post instructions are intentionally not invented. Add device-specific, clinically approved sources before enabling those outputs.
 

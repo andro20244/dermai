@@ -20,4 +20,4 @@ See the [application guide](dermaAi_full_project_with_chi/README.md) for the API
 
 ## Current limitations
 
-The workspace contains no HAM10000 dataset, trained weights, or model architecture/preprocessing metadata, so dermoscopy image upload works but automated diagnosis does not. Procedure modules collect case details but withhold treatment settings and instructions until validated sources are supplied. This is a local reference app, not a clinical decision-support system. Do not expose it to the internet or store real patient information in it.
+The dermoscopy module uses an optional community-hosted HAM10000 API, so images are sent to a third party only after clinician sign-in and explicit consent. Its results are research output, not a diagnosis. Procedure modules collect case details but withhold treatment settings and instructions until validated sources are supplied. Do not send identifiable patient images or expose the app to the internet.

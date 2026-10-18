@@ -223,6 +223,21 @@ h1 { margin: 9px 0 6px; color: #1c322a; font-family: 'DM Serif Display', Georgia
 .field input::placeholder, .field textarea::placeholder { color: #a4aea6; }
 .consent-field { display: flex; align-items: flex-start; gap: 9px; margin: 3px 0 13px; color: #78857b; font-size: 9px; line-height: 1.5; }
 .consent-field input { width: 14px; height: 14px; flex: none; margin: 0; accent-color: #34745c; }
+.external-consent { padding: 10px; border: 1px solid #eadfca; border-radius: 4px; background: #fbf8f0; }
+.prediction-actions { display: flex; align-items: center; gap: 10px; margin: 4px 0 13px; }
+.prediction-actions > span { color: #8a958e; font-size: 9px; }
+.prediction-actions .secondary-button { width: auto; min-width: 170px; margin: 0; }
+.prediction-actions .secondary-button:disabled { color: #859188; border-color: #e0e6df; background: #f2f4f0; }
+.prediction-result { margin: 12px 0; padding: 13px; border: 1px solid #dce7dc; border-radius: 5px; background: #f7faf5; }
+.result-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.result-heading h3 { margin: 5px 0 0; color: #304b3b; font-size: 14px; }
+.result-heading > strong { color: #32684d; font-size: 17px; }
+.probability-list { display: grid; gap: 8px; margin-top: 13px; }
+.probability-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; color: #65756a; font-size: 9px; }
+.probability-row > span:nth-child(2) { font-weight: 600; }
+.probability-row > div { grid-column: 1 / -1; height: 4px; overflow: hidden; border-radius: 3px; background: #e4ebe2; }
+.probability-row i { display: block; height: 100%; border-radius: inherit; background: #6b9e78; }
+.prediction-result > p { margin: 12px 0 0; color: #8b7858; font-size: 9px; line-height: 1.5; }
 .form-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 13px; border-top: 1px solid #edf0eb; }
 .form-actions > span { color: #89948d; font-size: 9px; }
 .primary-button, .secondary-button { display: inline-flex; min-height: 36px; align-items: center; justify-content: center; gap: 7px; padding: 0 12px; color: white; border: 1px solid #276955; border-radius: 4px; background: #276955; font-size: 10px; font-weight: 600; }
