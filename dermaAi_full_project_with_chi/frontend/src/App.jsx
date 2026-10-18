@@ -380,7 +380,7 @@ function App() {
                   <div className="panel-heading"><div><h2>New case</h2><p>Patient details and lesion image</p></div><span className="step-label">01 <i>/</i> CASE</span></div>
                   <label className={`image-drop ${imagePreview ? 'has-preview' : ''}`}>
                     {imagePreview ? <img src={imagePreview} alt="Selected dermoscopy case" /> : <><span className="drop-icon"><ImagePlus size={22} /></span><strong>Choose dermoscopy image</strong><span>JPEG or PNG · up to 10 MB</span></>}
-                    <input accept="image/jpeg,image/png,image/webp" onChange={(event) => setImageFile(event.target.files?.[0] || null)} type="file" />
+                    <input accept="image/jpeg,image/png" onChange={(event) => setImageFile(event.target.files?.[0] || null)} type="file" />
                   </label>
                   <div className="field-grid two-col">
                     <label className="field"><span>Age</span><input max="120" min="0" onChange={(event) => setDermoscopyCase((value) => ({ ...value, age: event.target.value }))} type="number" value={dermoscopyCase.age} /></label>
