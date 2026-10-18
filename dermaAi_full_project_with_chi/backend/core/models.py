@@ -3,7 +3,7 @@ from django.db import models
 
 class ClinicianUser(AbstractUser):
     specialty = models.CharField(max_length=100, default='Dermatology')
-    is_verified_clinician = models.BooleanField(default=True)
+    is_verified_clinician = models.BooleanField(default=False)
 
 class PatientCase(models.Model):
     patient_id = models.CharField(max_length=50, unique=True)
@@ -40,3 +40,20 @@ class ModelTrainingSubmission(models.Model):
     submitted_by = models.ForeignKey(ClinicianUser, on_delete=models.CASCADE, null=True, blank=True)
     status = models.CharField(max_length=50, default='Pending Review')
     submitted_at = models.DateTimeField(auto_now_add=True)
+
+
+class DermoscopySubmission(models.Model):
+    image = models.ImageField(upload_to='dermoscopy/submissions/')
+    age = models.PositiveIntegerField(null=True, blank=True)
+    sex = models.CharField(max_length=20, blank=True)
+    skin_phototype = models.CharField(max_length=5, blank=True)
+    localization = models.CharField(max_length=100)
+    confirmed_diagnosis = models.CharField(max_length=255, blank=True)
+    clinical_notes = models.TextField(blank=True)
+    consent_for_training = models.BooleanField(default=False)
+    status = models.CharField(max_length=50, default='Model unavailable')
+    submitted_by = models.ForeignKey(ClinicianUser, on_delete=models.SET_NULL, null=True, blank=True)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-submitted_at']

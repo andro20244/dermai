@@ -1,0 +1,11 @@
+.git/
+.DS_Store
+__pycache__/
+*.py[cod]
+*.sqlite3
+media/
+staticfiles/
+node_modules/
+dist/
+.env
+*.zip

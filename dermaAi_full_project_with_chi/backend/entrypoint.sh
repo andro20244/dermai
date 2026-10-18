@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+
+python manage.py migrate --noinput
+python manage.py seed_formulary
+exec gunicorn dermaAi_project.wsgi:application --bind 0.0.0.0:8000 --workers 2 --access-logfile - --error-logfile -
