@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 
 const API_ROOT = '/api/v1/';
+const MODEL_API_ROOT = (import.meta.env.VITE_DERMOSCOPY_MODEL_API_URL || 'https://javariarizwan-ham10000-api.hf.space').replace(/\/$/, '');
 const PAGE_SIZE = 25;
 
 const modules = [
@@ -149,9 +150,9 @@ function App() {
   useEffect(() => {
     if (activeModule !== 'dermoscopy') return undefined;
     const controller = new AbortController();
-    fetch(`${API_ROOT}dermoscopy/model-status/`, { signal: controller.signal })
+    fetch(`${MODEL_API_ROOT}/health`, { signal: controller.signal })
       .then((response) => response.json())
-      .then(setModelStatus)
+      .then((data) => setModelStatus({ available: data.status === 'ok', provider: 'JavariaRizwan/HAM10000_API' }))
       .catch((error) => {
         if (error.name !== 'AbortError') setModelStatus({ available: false, detail: 'Could not check the hosted model status.' });
       });
@@ -274,11 +275,15 @@ function App() {
     }
     if (!imageFile || !consentToExternalProcessing) return;
     const form = new FormData();
-    form.append('image', imageFile);
-    form.append('consent_to_external_processing', 'true');
+    form.append('file', imageFile);
     setAnalyzing(true);
     try {
-      const result = await apiRequest('dermoscopy/predict/', { method: 'POST', body: form }, token);
+      const response = await fetch(`${MODEL_API_ROOT}/predict`, { method: 'POST', body: form });
+      const result = await response.json().catch(() => null);
+      if (!response.ok) throw new Error(result?.detail || 'The hosted model rejected the image.');
+      if (typeof result?.predicted_class !== 'string' || !Number.isFinite(result?.confidence) || !result?.all_probabilities) {
+        throw new Error('The hosted model returned an invalid prediction.');
+      }
       setPrediction(result);
     } catch (error) {
       setPredictionError(error.message);

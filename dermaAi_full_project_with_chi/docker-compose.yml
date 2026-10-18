@@ -1,6 +1,9 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      args:
+        VITE_DERMOSCOPY_MODEL_API_URL: ${VITE_DERMOSCOPY_MODEL_API_URL:-https://javariarizwan-ham10000-api.hf.space}
     environment:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-local-docker-development-key-not-for-production}
       DJANGO_DEBUG: "0"

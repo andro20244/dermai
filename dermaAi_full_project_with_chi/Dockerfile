@@ -1,6 +1,8 @@
 FROM node:22-alpine AS frontend-build
 
 WORKDIR /frontend
+ARG VITE_DERMOSCOPY_MODEL_API_URL=https://javariarizwan-ham10000-api.hf.space
+ENV VITE_DERMOSCOPY_MODEL_API_URL=$VITE_DERMOSCOPY_MODEL_API_URL
 COPY frontend/package*.json ./
 RUN npm ci
 COPY frontend/ ./

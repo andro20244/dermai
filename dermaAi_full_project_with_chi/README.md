@@ -54,7 +54,7 @@ The Vite server proxies `/api` to `localhost:8000`. For direct backend developme
 
 ## Model and procedure notes
 
-The dermoscopy screen calls a community-hosted [HAM10000 API](https://javariarizwan-ham10000-api.hf.space/docs); no model weights are downloaded to your Mac. The API is third-party hosted and may sleep or become unavailable. A clinician must sign in and explicitly consent before an image is sent. Do not send identifiable patient photos. Returned class/confidence values are research output, not a diagnosis. Configure another compatible endpoint with `DERMOSCOPY_MODEL_API_URL` in `.env`.
+The dermoscopy screen calls a community-hosted [HAM10000 API](https://javariarizwan-ham10000-api.hf.space/docs) directly from the browser; no model weights are downloaded to your Mac. The API is third-party hosted and may sleep or become unavailable. A clinician must sign in and explicitly consent before an image is sent. Do not send identifiable patient photos. Returned class/confidence values are research output, not a diagnosis. Configure another compatible endpoint with `VITE_DERMOSCOPY_MODEL_API_URL` in `.env`, then rebuild with `docker compose up --build`.
 
 Images submitted with a confirmed diagnosis and separate training consent are stored locally; no model-training pipeline is included.
 
